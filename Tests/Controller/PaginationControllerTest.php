@@ -25,4 +25,16 @@ class PaginationControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
     }
     */
+
+    public function testRegistryIndexRoute()
+    {
+        // Create a new client to browse the application
+        $client = static::createClient();
+
+        // Go to the list view
+        //$crawler = $client->request('GET', '/_registry/');
+        //$this->assertTrue(200 === $client->getResponse()->getStatusCode());
+
+        $this->assertTrue(true == true);
+    }
 }

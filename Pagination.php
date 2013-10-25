@@ -88,10 +88,14 @@ class Pagination extends AbstractPagination
         $viewData['lastPageInRange']  = max($pages);
 
         if ($this->getItems() !== null) {
-            $viewData['currentItemCount'] = $this->count();
-            //$viewData['firstItemNumber'] = (($current - 1) * $this->numItemsPerPage) + 1;
-            $viewData['firstItemNumber'] = (($current - 1) * $this->getItemNumberPerPage()) + 1;
-            $viewData['lastItemNumber'] = $viewData['firstItemNumber'] + $viewData['currentItemCount'] - 1;
+            $viewData['firstItemNumber'] = (($current - 1) * $this->getItemNumberPerPage()) + 1; // first item on this page
+            if ($current + 1 <= $pageCount) // get the item count on this page
+            {
+                $viewData['currentItemCount'] = $this->getItemNumberPerPage();
+            } else {
+                $viewData['currentItemCount'] = $this->totalCount - ($viewData['firstItemNumber'] - 1); 
+            }
+            $viewData['lastItemNumber'] = ($viewData['firstItemNumber'] - 1) + $viewData['currentItemCount']; // last item on this page
         }
 
         return $viewData;
