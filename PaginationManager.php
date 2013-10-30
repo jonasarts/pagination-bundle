@@ -60,7 +60,12 @@ class PaginationManager
         $pagination->renderer = function($data) use ($twig_env, $twig_template, $additional_data) {
             //return var_export($data, true);
             // common errors to check: is $twig_template file present?
-            return $twig_env->render($twig_template, array_merge($data, $additional_data));
+            //return $twig_template;
+            try {
+                return $twig_env->render($twig_template, array_merge($data, $additional_data));
+            } catch(\Exception $e) {
+                return $e->getMessage();
+            }
         };
 
         return $pagination;

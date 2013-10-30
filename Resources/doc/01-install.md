@@ -32,12 +32,21 @@ You don't need to enable the bundle in the kernel as there is no controller in t
 You don't need to enable the bundle in *app/AppKernel.php*. You only need to register the service in *app/config/config.yml*:
 
 ```yaml
+# Twig Configuration
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+    globals:
+        pageParameterName:  "page"
+
 services:
     // ...
     pagination_manager:
         class: jonasarts\Bundle\PaginationBundle\PaginationManager
         arguments: [@service_container, @twig]
 ```
+
+Don't forget to add the global twig variable ``pageParameterName`` which is used by the example ``sliding.html.twig`` template file!
 
 The PaginationManager searches for a default pagination template in the file *app/Resources/views/sliding.html.twig*:
 
