@@ -21,10 +21,10 @@ To render a pagination, just output the pagination object returned by the Pagina
 
     $objects = array(); // an object array
     $count = 0; // total count of objects (NOT all object must be present in the object array)
-    $page_offset = 1; // first page
+    $current_page_index = 1; // first page
     $page_size = 10; // 10 objects per page
 
-    $pagination = $pm->getPagination($objects, $count, $page_offset, $page_size);
+    $pagination = $pm->getPagination($objects, $count, $current_page_index, $page_size);
 
     echo $pagination; // or echo $pagination->__toString();
 ```
@@ -58,7 +58,7 @@ This is how a controller action using a pagination manager may look like:
         $sort_direction = $pm->getSortDirection($request, 'asc'); // read the sortdireciton from the request, defalt fallback value is 'asc'
 
         // calculate limit
-        $page_offset = $request->query->get('page', 1); // read the page offset from the request, dfeault fallback value is 1
+        $current_page_index = $request->query->get('page', 1); // read the page offset from the request, dfeault fallback value is 1
         $page_size = 10; // how many records per page will be displayed
 
         // query
@@ -66,7 +66,7 @@ This is how a controller action using a pagination manager may look like:
         $records = ... retrieve the record objects limited by sort and page as an object array
 
         // pagination
-        $pagination = $pm->getPagination($records, $record_count, $page_offset, $page_size);
+        $pagination = $pm->getPagination($records, $record_count, $current_page_index, $page_size);
 
         return array('pagination' => $pagination);
     }
@@ -111,11 +111,11 @@ class RegistryKeyController extends Controller
     /**
      * Return all objects paginated
      */
-    private function getRK($sort_field_name, $sort_direction, $page_offset, $page_size)
+    private function getRK($sort_field_name, $sort_direction, $current_page_index, $page_size)
     {
         $em = $this->getDoctrine()->getManager();
         
-        $page_start = ($page_offset - 1) * $page_size;
+        $page_offset = ($current_page_index - 1) * $page_size; // note this page index to offset calculation
         $page_limit = $page_size;
 
         $query = $em
@@ -123,7 +123,7 @@ class RegistryKeyController extends Controller
             ->select('rk')
             ->from('RKBundle:RegistryKey', 'rk')
             ->orderBy('rk.'.$sort_field_name, $sort_direction)
-            ->setFirstResult($page_start)
+            ->setFirstResult($page_offset)
             ->setMaxResults($page_limit)
             ->getQuery();
 
@@ -147,15 +147,15 @@ class RegistryKeyController extends Controller
         $sort_direction = $pm->getSortDirection($request, 'asc');
 
         // calculate limit
-        $page_offset = $request->query->get('page', 1);
+        $current_page_index = $request->query->get('page', 1);
         $page_size = 10;
 
         // query
         $rk_count = $this->getRKCount();
-        $rks = $this->getRK($sort_field_name, $sort_direction, $page_offset, $page_size);
+        $rks = $this->getRK($sort_field_name, $sort_direction, $current_page_index, $page_size);
 
         // pagination
-        $pagination = $pm->getPagination($rks, $rk_count, $page_offset, $page_size);
+        $pagination = $pm->getPagination($rks, $rk_count, $current_page_index, $page_size);
 
         return array('sort_field_name' => $sort_field_name, 'sort_direction' => $sort_direction, 'pagination' => $pagination);
     }
