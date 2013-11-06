@@ -22,9 +22,10 @@ To render a pagination, just output the pagination object returned by the Pagina
     $objects = array(); // an object array
     $count = 0; // total count of objects (NOT all object must be present in the object array)
     $current_page_index = 1; // first page
+    $page_range = 5; // show 5 pages in paginator navigation
     $page_size = 10; // 10 objects per page
 
-    $pagination = $pm->getPagination($objects, $count, $current_page_index, $page_size);
+    $pagination = $pm->getPagination($objects, $count, $current_page_index, $page_range, $page_size);
 
     echo $pagination; // or echo $pagination->__toString();
 ```
@@ -59,14 +60,15 @@ This is how a controller action using a pagination manager may look like:
 
         // calculate limit
         $current_page_index = $request->query->get('page', 1); // read the page offset from the request, dfeault fallback value is 1
-        $page_size = 10; // how many records per page will be displayed
+        $page_range = 10; // how many pages will bee displayed in the paginator
+        $page_size = 10; // how many records will be displayed per page
 
         // query
         $record_count = ... retrieve the total count of records as an integer value
         $records = ... retrieve the record objects limited by sort and page as an object array
 
         // pagination
-        $pagination = $pm->getPagination($records, $record_count, $current_page_index, $page_size);
+        $pagination = $pm->getPagination($records, $record_count, $current_page_index, $page_range, $page_size);
 
         return array('pagination' => $pagination);
     }
@@ -148,6 +150,7 @@ class RegistryKeyController extends Controller
 
         // calculate limit
         $current_page_index = $request->query->get('page', 1);
+        $page_range = 10;
         $page_size = 10;
 
         // query
@@ -155,7 +158,7 @@ class RegistryKeyController extends Controller
         $rks = $this->getRK($sort_field_name, $sort_direction, $current_page_index, $page_size);
 
         // pagination
-        $pagination = $pm->getPagination($rks, $rk_count, $current_page_index, $page_size);
+        $pagination = $pm->getPagination($rks, $rk_count, $current_page_index, $page_range, $page_size);
 
         return array('sort_field_name' => $sort_field_name, 'sort_direction' => $sort_direction, 'pagination' => $pagination);
     }

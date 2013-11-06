@@ -51,7 +51,7 @@ class PaginationManagerTest extends WebTestCase
     {
         $this->GenerateDummyData(100);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 1, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 1, 10, 10);
 
         //var_dump($p->getPaginationData());
         
@@ -70,7 +70,7 @@ class PaginationManagerTest extends WebTestCase
         // previous must exist, so use a offset > 1
         $this->GenerateDummyData(30);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 2, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 2, 10, 10);
         
         $r = $p->getPaginationData();
 
@@ -82,7 +82,7 @@ class PaginationManagerTest extends WebTestCase
         // next must exist, so use a offset < max page
         $this->GenerateDummyData(30);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 2, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 2, 10, 10);
         
         $r = $p->getPaginationData();
 
@@ -93,7 +93,7 @@ class PaginationManagerTest extends WebTestCase
     {
         $this->GenerateDummyData(100);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 10, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 10, 10, 10);
         
         $r = $p->getPaginationData();
 
@@ -105,7 +105,7 @@ class PaginationManagerTest extends WebTestCase
     {
         $this->GenerateDummyData(100);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 5, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 5, 10, 10);
         
         $r = $p->getPaginationData();
 
@@ -117,7 +117,7 @@ class PaginationManagerTest extends WebTestCase
     {
         $this->GenerateDummyData(103);
 
-        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 11, 10);
+        $p = $this->pm->getPagination($this->dummy, count($this->dummy), 11, 10, 10);
         
         $r = $p->getPaginationData();
 

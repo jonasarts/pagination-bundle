@@ -33,7 +33,7 @@ class PaginationManager
         return $this;
     }
 
-    public function getPagination($entities, $entity_count, $current_page_index, $page_size, $additional_data = null)
+    public function getPagination($entities, $entity_count, $current_page_index, $page_range, $page_size, $additional_data = null)
     {
         if (($entities != null) && !is_array($entities)) {
             throw new \Exception('PaginationManager.getPagination: $entities is not an array');
@@ -50,7 +50,7 @@ class PaginationManager
         
         $pagination = new Pagination($entities, $entity_count);
 
-        $pagination->setPageRange($page_size);
+        $pagination->setPageRange($page_range);
         $pagination->setItemNumberPerPage($page_size);
         $pagination->setCurrentPageNumber($current_page_index);
 
