@@ -1,0 +1,7 @@
+parameters:
+    jonasarts.pagination_manager.class: jonasarts\Bundle\PaginationBundle\PaginationManager
+
+services:
+    pagination_manager:
+        class: %jonasarts.pagination_manager.class%
+        arguments: [ @service_container, @twig ]
