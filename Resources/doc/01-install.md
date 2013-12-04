@@ -10,9 +10,9 @@ First add the bundle to your composer.json file:
     // ...
     "require": {
         // ...
-        "jonasarts/pagination-bundle": "dev-master"
+        "jonasarts/pagination-bundle": "1.0.*"
     },
-    "minimum-stability": "alpha",
+    "minimum-stability": "stable",
     // ...
 }
 ```
