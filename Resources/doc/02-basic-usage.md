@@ -177,7 +177,7 @@ The column sort link generator macro in the file *macro.html.twig*:
     {% set sort_field = (current_sort_field_name == field_name and current_sort_direction == 'asc') ? field_name ~ '.desc' : field_name ~ '.asc' %}
 
     {% if current_sort_field_name == field_name %}
-        {% set sort_field_caret = (sort_field == field_name ~ '.asc') ? '&nbsp;<i class="icon-caret-down"></i>' : '&nbsp;<i class="icon-caret-up"></i>' %}
+        {% set sort_field_caret = (sort_field == field_name ~ '.asc') ? '&nbsp;<i class="fa fa-caret-down"></i>' : '&nbsp;<i class="fa fa-caret-up"></i>' %}
     {% endif %}
 
     {% set route = app.request.attributes.get('_route') %}
@@ -195,65 +195,50 @@ The twig template *index.html.twig*:
 
 {% block content%}
 <!-- the header (includes the add button) -->
-<div class="row-fluid">
-    <div class="span12">
 
-        <h1 class="pull-left">All objects <span class="badge badge-info">{{ pagination.totalcount }}</span></h1>
-        
-        <div class="pull-right">
-            <a href="{{ path('rk_new') }}" class="btn btn-success"><i class="icon-plus"></i> Add</a>
-        </div>
-
-    </div>
-</div>
+<h1>All objects <span class="badge badge-info">{{ pagination.totalcount }}</span></h1>
 
 <!-- the table with the object data rows -->
-<div class="row-fluid">
-    <div class="span12">
-
-        <table class="table table-hover table-condensed">
-        <tr>
-            <th>id</th><th>{{ sorts.column(sort_field_name, sort_direction, 'name', 'Name') }}</th><th>{{ sorts.column(sort_field_name, sort_direction, 'value', 'Value') }}</th><th>&nbsp;</th>
-        {% for rk in pagination %}
-            <tr>
-                <td>{{ rk.id }}</td><td>{{ rk.name }}</td><td>{{ rk.value }}</td>
-                <td>
-                    <div class="pull-right">
-                        <a href="{{ path('rk_edit', { 'id': rk.id }) }}" class="btn"><i class="icon-pencil"></i> edit</a>
-                        <button class="btn" onclick="$('#modal_rk_{{ rk.id }}').modal()"><i class="icon-trash"></i> delete</button>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </table>
-
-    </div>
-</div>
+<p><table class="table table-hover table-condensed">
+<tr>
+    <th>id</th><th>{{ sorts.column(sort_field_name, sort_direction, 'name', 'Name') }}</th><th>{{ sorts.column(sort_field_name, sort_direction, 'value', 'Value') }}</th><th><a href="{{ path('rk_new') }}" class="btn btn-success"><i class="fa fa-plus"></i> Add</a></th>
+{% for rk in pagination %}
+    <tr>
+        <td>{{ rk.id }}</td><td>{{ rk.name }}</td><td>{{ rk.value }}</td>
+        <td>
+            <div class="pull-right">
+                <a href="{{ path('rk_edit', { 'id': rk.id }) }}" class="btn"><i class="fa fa-pencil"></i> edit</a>
+                <button class="btn" onclick="$('#modal_rk_{{ rk.id }}').modal()"><i class="fa fa-trash-o"></i> delete</button>
+            </div>
+        </td>
+    </tr>
+{% endfor %}
+</table></p>
 
 <!-- the pagination -->
-<div class="row-fluid">
-    <div class="span12">
-        
-        {{ pagination|raw }}
-    
-    </div>
-</div>
+{{ pagination|raw }}
 
 <!-- bootstrap modal dialogs for object deletion -->
 {% for rk in pagination %}
-<div id="modal_rk_{{ rk.id }}" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Confirm object deletion</h3>
-    </div>
-    <div class="modal-body">
-        <p>Delete object {{ rk.name }}?</p>
-    </div>
-    <div class="modal-footer">
-        <a href="{{ path('rk_delete', { 'id': rk.id }) }}" class="btn btn-danger">Delete</a>
-        <button class="btn" data-dismiss="modal">Close</button>
-    </div>
-</div>
+<div id="modal_rk_{{ rk.id }}" class="modal fade" role="dialog" aria-labelledby="modal_rk_label_{{ rk.id }}" aria-hidden="true">
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modal_rk_label_{{ rk.id }}">Confirm object deletion</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Delete object {{ rk.name }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ path('rk_delete', { 'id': rk.id }) }}" class="btn btn-danger">Delete</a>
+                    <button class="btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endfor %}
 {% endblock %}
 ```
