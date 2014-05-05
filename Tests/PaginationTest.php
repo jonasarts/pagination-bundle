@@ -13,7 +13,7 @@ namespace jonasarts\Bundle\PaginationManager\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-use jonasarts\Bundle\PaginationBundle\Pagination;
+use jonasarts\Bundle\PaginationBundle\Pagination\Pagination;
 
 class PaginationTest extends WebTestCase
 {
