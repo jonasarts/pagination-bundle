@@ -13,7 +13,7 @@ namespace jonasarts\Bundle\PaginationManager\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PaginationManagerTest extends WebTestCase
+class PaginationServiceTest extends WebTestCase
 {
     /*
      * @var \Doctrine\ORM\EntityManager
