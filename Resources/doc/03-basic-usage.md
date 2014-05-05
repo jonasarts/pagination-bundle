@@ -1,10 +1,10 @@
 Using the bundle
 ================
 
-The PaginationManager is a service to handle all pagination related operations.
-This includes some helper methods for sorting.
+The Pagination (aka PaginationManager) is a service to handle all pagination related operations.
+This includes some helper methods for sorting and loading/saving a cursor.
 
-The method ``PaginationManager.getPagination()`` will return a pagination object with following properties/methods:
+The method ``Pagination.getPagination()`` will return a pagination object with following properties/methods:
 - pageCount
 - pagesInRange
 - totalCount
@@ -14,18 +14,18 @@ The method ``PaginationManager.getPagination()`` will return a pagination object
 - next
 - last
 
-To render a pagination, just output the pagination object returned by the PaginationManager.
+To render a pagination, just output the pagination object returned by the Pagination service.
 
 ```php
-    $pm = $this->get('pagination_manager');
+    $pm = $this->get('pagination');
 
     $objects = array(); // an object array
     $count = 0; // total count of objects (NOT all object must be present in the object array)
-    $current_page_index = 1; // first page
+    $page_index = 1; // first page
     $page_range = 5; // show 5 pages in paginator navigation
     $page_size = 10; // 10 objects per page
 
-    $pagination = $pm->getPagination($objects, $count, $current_page_index, $page_range, $page_size);
+    $pagination = $pm->getPagination($objects, $count, $page_index, $page_range, $page_size);
 
     echo $pagination; // or echo $pagination->__toString();
 ```
@@ -48,27 +48,29 @@ This is how a controller action using a pagination manager may look like:
      */
     public function indexAction()
     {
-        $pm = $this->get('pagination_manager'); // the pagination service
+        $pm = $this->get('pagination'); // the pagination service
         $request = $this->getRequest(); // the current request
         
         $record_count = 0;
         $records = null;
         
+        $page_range = 10; // how many pages will be displayed in the paginator
+        $page_size = 10; // how many records will be displayed per page
+        
         // calculate sort
         $sort_field_name = $pm->getSortFieldName($request, 'id'); // read the sortfieldname from the request, default fallback value is 'id'
         $sort_direction = $pm->getSortDirection($request, 'asc'); // read the sortdireciton from the request, defalt fallback value is 'asc'
-
+        
         // calculate limit
-        $current_page_index = $request->query->get('page', 1); // read the page offset from the request, dfeault fallback value is 1
-        $page_range = 10; // how many pages will bee displayed in the paginator
-        $page_size = 10; // how many records will be displayed per page
+        $page_index = $pm->getPageIndex($request, 'page'); // read the page offset from the request using the parameter `page`, default fallback value will be 1
+        $page_size = $pm->getPageSize($request, $page_size); // read the page size from registry, if RegistryBundle is available
 
         // query
         $record_count = ... retrieve the total count of records as an integer value
         $records = ... retrieve the record objects limited by sort and page as an object array
 
         // pagination
-        $pagination = $pm->getPagination($records, $record_count, $current_page_index, $page_range, $page_size);
+        $pagination = $pm->getPagination($records, $record_count, $page_index, $page_range, $page_size);
 
         return array('pagination' => $pagination);
     }
@@ -138,27 +140,29 @@ class RegistryKeyController extends Controller
      */
     public function indexAction()
     {
-        $pm = $this->get('pagination_manager');
+        $pm = $this->get('pagination');
         $request = $this->getRequest();
 
         $rk_count = 0;
         $rks = null;
+
+        $page_range = 10;
+        $page_size = 10;
 
         // calculate sort
         $sort_field_name = $pm->getSortFieldName($request, 'id');
         $sort_direction = $pm->getSortDirection($request, 'asc');
 
         // calculate limit
-        $current_page_index = $request->query->get('page', 1);
-        $page_range = 10;
-        $page_size = 10;
+        $page_index = $pm->getPageIndex($request, 'page');
+        $page_size = $pm->getPageSize($request, $page_size);
 
         // query
         $rk_count = $this->getRKCount();
-        $rks = $this->getRK($sort_field_name, $sort_direction, $current_page_index, $page_size);
+        $rks = $this->getRK($sort_field_name, $sort_direction, $page_index, $page_size);
 
         // pagination
-        $pagination = $pm->getPagination($rks, $rk_count, $current_page_index, $page_range, $page_size);
+        $pagination = $pm->getPagination($rks, $rk_count, $page_index, $page_range, $page_size);
 
         return array('sort_field_name' => $sort_field_name, 'sort_direction' => $sort_direction, 'pagination' => $pagination);
     }

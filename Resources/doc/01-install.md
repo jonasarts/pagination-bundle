@@ -10,7 +10,7 @@ First add the bundle to your composer.json file:
     // ...
     "require": {
         // ...
-        "jonasarts/pagination-bundle": "1.0.*"
+        "jonasarts/pagination-bundle": "1.1.*"
     },
     "minimum-stability": "stable",
     // ...
@@ -25,30 +25,27 @@ $ php composer.phar install
 
 ## Enable the bundle
 
-You don't need to enable the bundle in the kernel as there is no controller in the bundle present.
+Register the bundle in the kernel:
 
-### Enable the service
+```php
+// app/AppKernel.php
 
-You don't need to enable the bundle in *app/AppKernel.php*. You only need to register the service in *app/config/config.yml*:
-
-```yaml
-# Twig Configuration
-twig:
-    debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
-    globals:
-        pageParameterName:  "page"
-
-services:
-    // ...
-    pagination_manager:
-        class: jonasarts\Bundle\PaginationBundle\PaginationManager
-        arguments: [@service_container, @twig]
+public function registerBundles()
+{
+    $bundles = array(
+        // ...
+        new jonasarts\Bundle\PaginationBundle\PaginationBundle(),
+    );
+}
 ```
 
-Don't forget to add the global twig variable ``pageParameterName`` which is used by the example ``sliding.html.twig`` template file!
+## Configuration options
 
-The PaginationManager searches for a default pagination template in the file *app/Resources/views/sliding.html.twig*:
+[Read the bundle configuration options](02-configuration.md)
+
+## sliding.html.twig Example
+
+The Pagination service searches for a default pagination template in the file *app/Resources/views/sliding.html.twig*:
 
 ```php
 {% set route = app.request.attributes.get('_route') %}

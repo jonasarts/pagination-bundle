@@ -31,6 +31,10 @@ class PaginationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // apply config globals
+        $container->setParameter('pagination.globals.template', $config['globals']['template']);
+        $container->setParameter('pagination.globals.auto_register', $config['globals']['auto_register']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

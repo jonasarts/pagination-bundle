@@ -9,9 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\PaginationBundle;
+namespace jonasarts\Bundle\PaginationBundle\Pagination;
 
-use Countable, Iterator, ArrayAccess;
+use Countable;
+use Iterator;
+use ArrayAccess;
 
 /**
  * Abstract pagination class

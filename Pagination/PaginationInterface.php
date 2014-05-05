@@ -9,12 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\PaginationBundle;
+namespace jonasarts\Bundle\PaginationBundle\Pagination;
 
 /**
- * Pagination interface strictly defines
- * the methods - paginator will use to populate the
- * pagination data
+ * Pagination interface
  */
 interface PaginationInterface
 {

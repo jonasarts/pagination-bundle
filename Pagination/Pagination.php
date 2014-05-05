@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\PaginationBundle;
+namespace jonasarts\Bundle\PaginationBundle\Pagination;
 
 use Closure;
 
@@ -32,20 +32,29 @@ class Pagination extends AbstractPagination
      */
     public $renderer;
 
+    /**
+     * @param integer $range
+     * @return Pagination
+     */
     public function setPageRange($range)
     {
         $this->range = intval(abs($range));
+
+        return $this;
     }
 
+    /**
+     * Populates an pagination 'viewdata' array.
+     *  
+     * @return array
+     */
     public function getPaginationData()
     {
-        //$pageCount = intval(ceil($this->totalCount / $this->numItemsPerPage));
         if ($this->getItemNumberPerPage() > 0) {
             $pageCount = intval(ceil($this->totalCount / $this->getItemNumberPerPage()));
         } else {
             $pageCount = 1;
         }
-        //$current = $this->currentPageNumber;
         $current = $this->getCurrentPageNumber();
 
         if ($this->range > $pageCount) {
@@ -68,7 +77,6 @@ class Pagination extends AbstractPagination
         $viewData = array(
             'last' => $pageCount,
             'current' => $current,
-            //'numItemsPerPage' => $this->numItemsPerPage,
             'numItemsPerPage' => $this->getItemNumberPerPage(),
             'first' => 1,
             'pageCount' => $pageCount,
@@ -112,6 +120,8 @@ class Pagination extends AbstractPagination
 
     /**
      * Just a helper method for short access to AbstractPagination.getTotalItemCount()
+     * 
+     * @return integer
      */
     public function getTotalCount()
     {
@@ -120,6 +130,8 @@ class Pagination extends AbstractPagination
 
     /**
      * Renders the pagination
+     * 
+     * @return string
      */
     public function __toString()
     {

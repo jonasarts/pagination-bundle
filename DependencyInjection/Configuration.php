@@ -29,9 +29,25 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ja_paginator');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('globals')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        // default pagination template
+                        ->scalarNode('template')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->defaultValue('sliding.html.twig')
+                        ->end()
+                        // auto register pagination values (requires registry service)
+                        ->booleanNode('auto_register')
+                            ->isRequired()
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
