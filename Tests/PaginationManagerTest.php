@@ -42,7 +42,7 @@ class PaginationManagerTest extends WebTestCase
             ->getManager()
         ;
         $this->pm = static::$kernel->getContainer()
-            ->get('pagination_manager');
+            ->get('pagination');
     }
 
     // pagionation tests
