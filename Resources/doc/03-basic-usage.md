@@ -8,7 +8,7 @@ The method ``Pagination.getPagination()`` will return a pagination object with f
 - pageCount
 - pagesInRange
 - totalCount
-- fist
+- first
 - previous
 - current
 - next
