@@ -38,6 +38,8 @@ class Pagination
     }
 
     /**
+     * Method handling the auto-registering of values
+     * 
      * @param Request $request
      * @param array $data one key=>value set; key is the registry name to lookup if value is null or to update if a value is given
      * @return mixed last value if value is null in data array; current value if value is given in data array
@@ -213,6 +215,26 @@ class Pagination
         if ($page_index == 0 || $page_index == null) $page_index = 1;
 
         return $page_index;
+    }
+
+    /**
+     * Reads the page range (NOT from request, only needed for auto_register behavior).
+     * 
+     * @param Request $request
+     * @param string $default_size The value to return if no custom page_range is found
+     * @return integer
+     */
+    public function getPageRange(Request $request, $default_size = 10);
+    {
+        $page_range = null;
+
+        if ($this->auto_register) {
+            $page_range = $this->register($request, array('pagerange' => $page_range), 'int');
+        }
+
+        if ($page_range == 0 || $page_range == null) $page_range = $default_size;
+
+        return $page_range;
     }
 
     /**
