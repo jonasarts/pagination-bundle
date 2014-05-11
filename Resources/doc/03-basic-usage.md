@@ -63,6 +63,7 @@ This is how a controller action using a pagination manager may look like:
         
         // calculate limit
         $page_index = $pm->getPageIndex($request, 'page'); // read the page offset from the request using the parameter `page`, default fallback value will be 1
+        $page_range = $pm->getPageRange($request, $page_range); // read the page range from registry, if RegistryBundle is available
         $page_size = $pm->getPageSize($request, $page_size); // read the page size from registry, if RegistryBundle is available
 
         // query
@@ -155,6 +156,7 @@ class RegistryKeyController extends Controller
 
         // calculate limit
         $page_index = $pm->getPageIndex($request, 'page');
+        $page_range = $pm->getPageRange($request, $page_range);
         $page_size = $pm->getPageSize($request, $page_size);
 
         // query

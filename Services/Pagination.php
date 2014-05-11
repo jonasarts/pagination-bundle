@@ -224,7 +224,7 @@ class Pagination
      * @param string $default_size The value to return if no custom page_range is found
      * @return integer
      */
-    public function getPageRange(Request $request, $default_size = 10);
+    public function getPageRange(Request $request, $default_size = 10)
     {
         $page_range = null;
 
