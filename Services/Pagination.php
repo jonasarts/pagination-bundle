@@ -218,6 +218,34 @@ class Pagination
     }
 
     /**
+     * Reset (delete) the page index for the current request.
+     * 
+     * @param Request $request The request is needed to retrieve current route name
+     * @param string $key The parameter name to reset the page_index value
+     * @return Pagination
+     */
+    public function resetPageIndex(Request $request, $key)
+    {
+        if ($this->container->has('registry')) {
+            $rm = $this->container->get('registry');
+
+            $userid = 0;
+            $token = $this->container->get('security.context')->getToken();
+            if ($token) {
+                $user = $token->getUser();
+                if ($user) {
+                    $userid = $user->getId();
+                }
+            }
+            $route = $request->get('_route');
+
+            $value = $rm->RegistryDelete($userid, 'pagination/'.$route, $key, $type);
+        }
+
+        return $this;
+    }
+
+    /**
      * Reads the page range (NOT from request, only needed for auto_register behavior).
      * 
      * @param Request $request
