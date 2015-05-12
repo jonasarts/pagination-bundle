@@ -135,6 +135,47 @@ class Pagination
     }
 
     /**
+     * @param  Request $request
+     * @return string
+     */
+    public function getPageSizeSelector(Request $request, array $additional_params = null)
+    {
+        $router = $this->container->get('router');
+        $params = array(); //$request->query->all();
+        $routename = $request->get('_route');
+
+        if (is_null($additional_params)) $additional_params = array();
+
+        $sizes = array(10,20,50,100);
+
+        $s = '';
+
+        $current = $this->getPageSize($request, 'pagesize'); // read pagesize
+
+        foreach($sizes as $size) {
+            $url = $router->generate($routename, array_merge($params, $additional_params, array('pagesize' => $size)));
+
+            if ($current == $size) {
+                $s .= sprintf(
+                    '<li class="active"><span>%d</span></li>',
+                    $size
+                    );
+            } else {
+                $s .= sprintf(
+                    '<li><a href="%s" title="%d results per page">%d</a></li>',
+                    $url,
+                    $size,
+                    $size,
+                    $size
+                    );
+            }
+        }
+        $s = sprintf('<ul class="pagination pagination-sm">%s</ul>', $s);
+
+        return array('pagesizeselector' => $s);
+    }
+
+    /**
      * Reads sort field from request.
      * If sort field present, updates value to registry.
      * If no sort field is found, tries to read last value from registry.
@@ -197,10 +238,11 @@ class Pagination
      * Reads the page index from request.
      * 
      * @param Request $request
-     * @param string $key The parameter name to read from request to get page_index value
+     * @param string  $key The parameter name to read from request to get page_index value
+     * @param integer $default_page_index The value to return if not custom page_index is found
      * @return interger
      */
-    public function getPageIndex(Request $request, $key)
+    public function getPageIndex(Request $request, $key = 'pageindex', $default_page_index = 1)
     {
         $page_index = null;
 
@@ -209,10 +251,10 @@ class Pagination
         }
 
         if ($this->auto_register) {
-            $page_index = $this->register($request, array('pageindex' => $page_index), 'int');
+            $page_index = $this->register($request, array($key => $page_index), 'int');
         }
 
-        if ($page_index == 0 || $page_index == null) $page_index = 1;
+        if ($page_index == 0 || $page_index == null) $page_index = $default_page_index;
 
         return $page_index;
     }
@@ -221,10 +263,10 @@ class Pagination
      * Reset (delete) the page index for the current request.
      * 
      * @param Request $request The request is needed to retrieve current route name
-     * @param string $key The parameter name to reset the page_index value
+     * @param string $key The parameter name to read from request to get page_index value
      * @return Pagination
      */
-    public function resetPageIndex(Request $request, $key)
+    public function resetPageIndex(Request $request, $key = 'pageindex')
     {
         if ($this->container->has('registry')) {
             $rm = $this->container->get('registry');
@@ -239,7 +281,7 @@ class Pagination
             }
             $route = $request->get('_route');
 
-            $value = $rm->RegistryDelete($userid, 'pagination/'.$route, $key, $type);
+            $value = $rm->RegistryDelete($userid, 'pagination/'.$route, $key, 'int');
         }
 
         return $this;
@@ -249,18 +291,23 @@ class Pagination
      * Reads the page range (NOT from request, only needed for auto_register behavior).
      * 
      * @param Request $request
-     * @param string $default_size The value to return if no custom page_range is found
+     * @param string  $key The parameter name to read from request to get page_range value
+     * @param string  $default_page_range The value to return if no custom page_range is found
      * @return integer
      */
-    public function getPageRange(Request $request, $default_size = 10)
+    public function getPageRange(Request $request, $key = 'pagerange', $default_page_range = 10)
     {
         $page_range = null;
 
-        if ($this->auto_register) {
-            $page_range = $this->register($request, array('pagerange' => $page_range), 'int');
+        if ($request->query->has($key)) {
+            $page_index = $request->query->get($key);
         }
 
-        if ($page_range == 0 || $page_range == null) $page_range = $default_size;
+        if ($this->auto_register) {
+            $page_range = $this->register($request, array($key => $page_range), 'int');
+        }
+
+        if ($page_range == 0 || $page_range == null) $page_range = $default_page_range;
 
         return $page_range;
     }
@@ -269,18 +316,23 @@ class Pagination
      * Reads the page size (NOT from request, only needed for auto_register behavior).
      * 
      * @param Request $request
-     * @param integer $default_size The value to return if no custom page_size is found
+     * @param string  $key The parameter name to read from request to get page_size value
+     * @param integer $default_page_size The value to return if no custom page_size is found
      * @return integer
      */
-    public function getPageSize(Request $request, $default_size = 10)
+    public function getPageSize(Request $request, $key = 'pagesize', $default_page_size = 10)
     {
         $page_size = null;
 
-        if ($this->auto_register) {
-            $page_size = $this->register($request, array('pagesize' => $page_size), 'int');
+        if ($request->query->has($key)) {
+            $page_size = $request->query->get($key);
         }
 
-        if ($page_size == 0 || $page_size == null) $page_size = $default_size;
+        if ($this->auto_register) {
+            $page_size = $this->register($request, array($key => $page_size), 'int');
+        }
+
+        if ($page_size == 0 || $page_size == null) $page_size = $default_page_size;
 
         return $page_size;
     }

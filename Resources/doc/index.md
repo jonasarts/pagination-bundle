@@ -1,6 +1,8 @@
 jonasarts pagination-bundle
 ===========================
 
+Breaking changes in V 1.3.0! Read the [changelog](changes.md)!
+
 Installation
 ------------
 

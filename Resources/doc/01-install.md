@@ -51,7 +51,7 @@ The Pagination service searches for a default pagination template in the file *a
 {% set route = app.request.attributes.get('_route') %}
 {% set route_params = app.request.query.all %}
 
-{% if pageCount > 1 %}
+{% if pageCount > 0 %}
 <div class="pagination pagination-small">
 <ul>
     {# if first is defined and current != first %}
